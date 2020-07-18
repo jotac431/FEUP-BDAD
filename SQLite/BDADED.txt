@@ -1,0 +1,63 @@
+14.
+Select Estudante.nome as Estudante, Estudante.curso as Curso 
+From Estudante, Curso 
+where Estudante.anoCurricular = 3 and Estudante.curso = Curso.ID
+
+15.
+Select Estudante.nome as Nome 
+from Estudante 
+where 3 < (Select count(ID1) from Amizade where ID1 = Estudante.ID);
+
+16.
+Select E1.nome as Nome, E1.anoCurricular as AnoCurricular 
+from Estudante E1 
+where E1.ID in 
+(Select E1.ID from Estudante E1, Estudante E2, Amizade where E1.anoCurricular = E2.anoCurricular and ID1 = E1.ID and ID2 = E2.ID) 
+and E1.ID not in 
+(Select E1.ID from Estudante E1, Estudante E2, Amizade where E1.anoCurricular <> E2.anoCurricular and ID1 = E1.ID and ID2 = E2.ID) 
+order by AnoCurricular, Nome ;
+
+17.
+Select A1.ID1 as ID from Amizade A1, Amizade A2, Amizade A3, Estudante 
+where A1.ID2 = A2.ID1 and A2.ID2 = A3.ID1 and A3.ID2 = Estudante.ID and Estudante.nome = "Miguel Sampaio";
+
+18.
+Select E1.nome, E1.anoCurricular 
+from Estudante E1 
+where not exists 
+(Select * from Estudante E2 
+where (Select count(ID1) from Amizade where ID1 = E1.ID)<(Select count(ID1) from Amizade where ID1 = E2.ID));
+
+
+2015
+
+15.
+Select caption from Photo where Photo.user in 
+( Select User.id from User where name like "Daniel Ramos")
+and julianday(uploadDate) - julianday(creationDate) = 2;
+
+16.
+Select Distinct name from User where id not in( Select Photo.user from Photo);
+
+17. 
+Select avg(cnt) as Média from 
+(Select count(*) as cnt from AppearsIn where AppearsIn.photo in 
+(Select Photo.id from Photo where 
+(select count(*) from Likes where Photo.id = Likes.photo) > 3)
+group by AppearsIn.photo);
+
+18.
+Select Photo.caption from Photo where Photo.id in 
+(Select AppearsIn.photo from AppearsIn where AppearsIn.user in 
+(Select User.id from User where User.name like "Daniel Ramos")
+or AppearsIn.user in
+(Select Friend.user1 from Friend where Friend.user2 in
+(Select User.id from User where User.name like "Daniel Ramos"))
+or AppearsIn.user in
+(Select Friend.user1 from Friend where Friend.user2 in
+(Select Friend.user1 from Friend where Friend.user2 in
+(Select User.id from User where User.name like "Daniel Ramos"))));
+
+Select * from Photo where Photo.creationDate > "2013-06-20";
+19.
+Delete from Photo where Photo.creationDate > "2013-06-20" and (select count(*) from AppearsIn where AppearsIn.photo = Photo.id) < 2;
