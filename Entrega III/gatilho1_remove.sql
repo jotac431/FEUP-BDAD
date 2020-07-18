@@ -1,0 +1,1 @@
+Drop Trigger create_cliente;
